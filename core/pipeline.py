@@ -1,5 +1,6 @@
 # core/pipeline.py
 # en üst
+from data.metadata_builder import FileScanner 
 from ai.generators.youtube import YouTubeGenerator
 from pathlib import Path
 import types  # <-- ekle
@@ -22,7 +23,7 @@ class ContentPipeline:
 
     def run(self):
         print("▶ ContentPipeline başladı")
-        lora_sets = scan(self.cfg.BASE_DIR)
+        lora_sets = FileScanner(self.cfg.BASE_DIR).scan() #scan(self.cfg.BASE_DIR)
         if not lora_sets:
             print("ℹ Yeni set bulunamadı")
             return
@@ -37,16 +38,5 @@ class ContentPipeline:
         print(f"✔ Excel’e eklenen yeni set: {added}")
         
     def _scan(self):
-        return scan(self.cfg.BASE_DIR)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        return FileScanner(self.cfg.BASE_DIR).scan()
     
