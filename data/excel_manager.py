@@ -47,6 +47,9 @@ class ExcelManager:
                 else:
                     row[col] = bool(val)      # varsa True/False
 
+            path_obj = row.get("Preview")
+            row["Path"] = str(path_obj) if path_obj else "N/A"
+
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme
             self.df.loc[len(self.df)] = clean_row
