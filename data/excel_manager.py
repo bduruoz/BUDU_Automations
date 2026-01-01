@@ -32,12 +32,20 @@ class ExcelManager:
         for row in new_rows:
             if row["Set Name"] in existing:
                 continue
+            
+            # regresyon onarımı: Path → bool
+            row["MP4"]     = bool(row.get("MP4", False))
+            row["MOV"]     = bool(row.get("MOV", False))
+            row["Square"]  = bool(row.get("Square", False))
+            row["Preview"] = bool(row.get("Preview", False))
+
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme
             self.df.loc[len(self.df)] = clean_row
             added += 1
         if added:
             self._save()
+            print(f"✔ Excel güncellendi (bool sütunları düzeltildi): {self.file_path}")
         return added
 
     def mark_published(self, set_name: str, platforms: list[str]):
