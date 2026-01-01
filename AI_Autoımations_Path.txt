@@ -1,0 +1,50 @@
+AI_Automations/
+├─ ai/
+│	├─ generators/
+│   ├─	├─ __init__.py
+│   ├─	├─ blog_story.py
+│   ├─	├─ facebook.py
+│   ├─	├─ micro_blog.py
+│   ├─	├─ short_form.py
+│   ├─	├─ youtube.py
+├   ├─ __init__.py
+│   ├─ base_prompt.py
+│   ├─ ensemble_text.py *
+│   ├─ hashtag_suggest.py
+│   ├─ metadata_fetcher.py
+│   ├─ text_generator.py
+│─ configs/
+│   ├─ __init__.py
+│   ├─ explora.py
+├─ core/
+│   ├─ __init__.py
+│   ├─ pipeline.py
+│   ├─ scheduler.py *
+│   ├─ logger.py *
+├─ data/
+│   ├─ __init__.py
+│   ├─ excel_manager.py
+│   ├─ file_scanner.py
+│   ├─ metadata_builder.py
+├─ publishers/
+│   ├─ __init__.py
+│   ├─ youtube.py
+│   ├─ wordpress.py
+│   ├─ vimeo.py
+│   ├─ linkedin.py
+│   ├─ tumblr.py
+│   ├─ mastodon.py
+│   ├─ bluesky.py
+│   ├─ twitter.py
+│   ├─ facebook.py
+├─ tests/
+│   ├─ __init__.py
+│   ├─ LMStudioConnection.py
+├─ utils/
+│   ├─ __init__.py
+│   ├─ auth.py
+│   ├─ retry.py
+│   ├─ rate_limit.py
+├─ __init__.py
+├─ ExploreLora.py
+│

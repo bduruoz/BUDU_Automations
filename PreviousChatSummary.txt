@@ -1,0 +1,95 @@
+Chat özeti
+
+DETAYLI TÜRKÇE ÖZET – Yeni Chat Penceresi İçin Kopyala-Yapıştır
+Proje Adı: AI_Automations
+Hedef: E:\AI-Outputs\LoraWeights\Publish klasöründeki render dosyalarını otomatik tarayarak
+– Excel raporu (freeze, zebra, True/False/Error renkleri)
+– AI metin üretimi (LM-Studio)
+– Multi-platform publish (Youtube, Vimeo, WP, Mastodon, Bluesky, Twitter, IG, FB)
+– Publish sonrası dosyaları ...\Published altına taşıma.
+1. Klasör & Görev Dağılımı
+Copy
+AI_Automations/
+├─ core/
+│  ├─ pipeline.py              → ContentPipeline
+│  └─ __init__.py
+├─ data/
+│  ├─ excel_manager.py         → Excel renklendirme, freeze, FutureWarning çözüldü
+│  ├─ file_scanner.py          → scan(BASE_DIR) : list[dict]
+│  └─ __init__.py
+│  ├─ metadata_builder.py	   → Video dataları burada okunuyor.
+├─ ai/
+│  ├─ text_generator.py        → openai client, LM-Studio localhost:9090/v1
+│  ├─ ensemble_text.py         → 3× metin → consensus + skor → en iyi cümleler
+│  ├─ generators/
+│  │  ├─ __init__.py
+│  │  └─ youtube.py            → “Exploring LORA: <SetName> …” title + desc
+│  └─ metadata_fetcher.py      → Wikipedia 1-cümle artist bilgisi (placeholder)
+├─ publishers/                 → (boş – upload modülleri gelecek)
+├─ configs/
+│  ├─ __init__.py
+│  └─ explora.py                  → COLS, renk paleti, SEO/Tags, SERIES_TAG
+├─ ExploreLora.py              → entry script, sys.path insert, LM-Studio testi ÇALIŞTI
+└─ __init__.py
+
+2. Çalışan Özellikler
+CamelCase → space ayrımı (AndreasAchenbach → Andreas Achenbach)
+Excel: 1. satır freeze, zebra renk, True=yeşil, False=kırmızı, Error=açık kırmızı
+Path kolonu string olarak Excel’de
+LM-Studio bağlantısı çalışıyor; title + description tam metin üretildi
+Token limiti 400 → 800; kesilme giderildi
+Prompt mühendisliği: “input town photo → LORA style render” netleştirildi
+Config temelli: yeni seri ekleme = configs/xxx.py + ExploreXxx.py yeterli
+
+3. Kalan / Sıradaki Adımlar (Sıralı)
+Generator çoğaltma (aynı kalıp)
+blog_story.py → teknik hikâye (800-1000 kelime)
+micro_blog.py → Mastodon / Bluesky (500 karakter)
+short_form.py → IG & YT Shorts (2200 karakter)
+facebook.py → FB uzun metin
+Hashtag & SEO otomasyonu
+ai/hashtag_suggest.py → SetName + SEO_KEYWORDS + CommonTags
+BERT-score / perplexity GPU (opsiyon – 5090 hazır)
+Publisher modülleri
+YouTube upload (API key, oauth)
+WordPress REST (blog post)
+Mastodon, Bluesky, Twitter, Instagram, Facebook API post
+Scheduler
+cfg.ALLOWED_DAYS = {"Wednesday", "Saturday"}
+Windows Task Scheduler / cron çağrısı
+Post-publish
+ContentPipeline._move_to_published() → dosya taşıma
+Excel’de Published At + platform kolonları TRUE
+Prompt iyileştirmeleri
+“input photo” yerine “input image (JPG/PNG)” genellemesi
+Dil seçimi (cfg.LANGUAGE = "en"), emoji on/off, max karakter limitleri
+Yeni seri ekleme
+Kopyala: configs/portrait.py, ExplorePortrait.py
+Değiştir: SERIES_TAG, BASE_DIR, COLS, renk paleti
+
+4. Mini Kod Parçaları (Kopyala-Yapıştır)
+LM-Studio çalışmazsa otomatik açtırma:
+Python
+Copy
+# ai/lm_studio_launcher.py
+import subprocess, psutil, time
+def ensure_lm_studio(port=9090, exe=r"C:\Program Files\LM Studio\LM Studio.exe"):
+    for p in psutil.process_iter(['name']):
+        if "lm studio" in p.info['name'].lower(): return
+    subprocess.Popen([exe]); time.sleep(8)
+Entry script başına:
+Python
+Copy
+from ai.lm_studio_launcher import ensure_lm_studio
+ensure_lm_studio()
+
+5. Hızlı Test Komutu
+powershell
+Copy
+cd E:\
+python -m AI_Automations.ExploreLora          # veya
+python AI_Automations\ExploreLora.py
+Çıktı: 9 set tarandı, Excel güncellendi, YouTube metinleri üretildi.
+
+Bu metni yeni sohbette yapıştır → üzerine “youtube upload modülünü yazalım” gibi komut yaz, kaldığımız yerden devam ederiz.
+
