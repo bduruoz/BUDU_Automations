@@ -43,11 +43,13 @@ class FileScanner:
 
             # ---------- 2) TEKNİK ALANLARI EKLE ----------
             tech = ARTIST_MAP.get(set_name, {
-                "Artist": set_name,               # fallback
+                "Artist": set_name,
                 "Trigger": set_name.replace(" ", ""),
                 "Weight": "0.75-0.9",
                 "CFG": "6-8",
             })
+            sets[set_name].update(tech)
+            
 
             if set_name not in sets:
                 sets[set_name] = {
