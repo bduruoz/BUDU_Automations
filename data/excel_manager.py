@@ -36,7 +36,7 @@ class ExcelManager:
             row["MP4"]     = bool(row.get("MP4", False))
             row["MOV"]     = bool(row.get("MOV", False))
             row["Square"]  = bool(row.get("Square", False))
-            row["Preview"] = bool(row.get("Preview", False))
+            row["Preview"] = bool(row.get("Preview"))
             row["Discovered At"] = pd.Timestamp.now()  # şu an
             row["Published At"]  = (pd.Timestamp(row["Published At"]) if pd.notna(row.get("Published At")) else "Non Published")
             platforms = ["Youtube", "Vimeo", "DuruozNet", "Linkedin", "Tumblr", "Mastodon", "BlueSky", "Twitter", "Instagram", "Shorts", "Facebook"]
@@ -47,8 +47,9 @@ class ExcelManager:
                 else:
                     row[col] = bool(val)      # varsa True/False
 
-            path_obj = row.get("Preview")
-            row["Path"] = str(path_obj) if path_obj else "N/A"
+            #path_obj = row.get("Preview")
+            #row["Path"] = str(path_obj) if path_obj else "N/A"
+            row["Path"] = str(row.get("Preview")) if row["Preview"] else "N/A"
 
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme
