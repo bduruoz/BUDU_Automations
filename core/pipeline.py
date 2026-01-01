@@ -1,16 +1,14 @@
 # core/pipeline.py
+import types
+from pathlib import Path
 from data.metadata_builder import FileScanner 
 from ai.generators.youtube import YouTubeGenerator
-from pathlib import Path
-import types
 from AI_Automations.data.file_scanner import scan
 from AI_Automations.data.excel_manager import ExcelManager
-from ai.generators.youtube import YouTubeGenerator
-
 
 class ContentPipeline:
     def __init__(self, config):
-        self.cfg = types.SimpleNamespace(**config)  # dict → object
+        self.cfg = types.SimpleNamespace(**config)
         self.excel = ExcelManager(
             self.cfg.EXCEL_PATH,
             colors={
@@ -26,7 +24,7 @@ class ContentPipeline:
         print("▶ Content Pipeline Started")
         lora_sets = FileScanner(self.cfg.BASE_DIR).scan() 
         if not lora_sets:
-            print("ℹ Yeni LORA Seti Bulunamadı !")
+            print("ℹ New LORA Set Not Found !")
             return
         
         # Youtube Metinleri Oluştur
@@ -37,7 +35,7 @@ class ContentPipeline:
             row["Youtube Description"] = yt["description"]
         
         added = self.excel.add_new_sets(lora_sets)
-        print(f"✔ Excel’e eklenen yeni set: {added}")
+        print(f"✔ {added} new sets added to Excel")
         
     def _scan(self):
         return FileScanner(self.cfg.BASE_DIR).scan()

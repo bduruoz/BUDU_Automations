@@ -1,21 +1,28 @@
 # data/excel_manager.py
+from csv import writer
 import pandas as pd
 from pathlib import Path
+from datetime import datetime
+
 
 COLS = [
-    "Set Name", "MP4", "MOV", "Square", "Preview", "Youtube Title", "Youtube Description",
+    "Set Name", "MP4", "MOV", "Square", "Preview",
     "Created At", "Discovered At", "Published At",
     "Youtube", "Vimeo", 
     "DuruozNet", 
     "Linkedin", "Tumblr", "Mastodon", "BlueSky", "Twitter", 
     "Instagram", "Shorts", "Facebook",
-    "Path"
+    "Path", 
+    "Youtube Title", "Youtube Description"
 ]
 
 class ExcelManager:
     def __init__(self, excel_path: str | Path, colors: dict | None = None):
         self.excel_path = Path(excel_path)
         self.colors = colors or {}          # varsayılan boş
+        self.path_width = 15
+        self.title_width = 25
+        self.desc_width  = 50
         self.df = self._load_or_create()
         
         # ---------- load / create ----------
@@ -40,25 +47,24 @@ class ExcelManager:
             row["Square"]  = bool(row.get("Square", False))
             row["Preview"]  = bool(row.get("Preview", False))
             
-            row["Discovered At"] = pd.Timestamp.now()  # şu an
+            row["Discovered At"] = pd.Timestamp.now().replace(microsecond=0)
             row["Published At"]  = (pd.Timestamp(row["Published At"]) if pd.notna(row.get("Published At")) else "Non Published")
             platforms = ["Youtube", "Vimeo", "DuruozNet", "Linkedin", "Tumblr", "Mastodon", "BlueSky", "Twitter", "Instagram", "Shorts", "Facebook"]
             for col in platforms:
                 val = row.get(col)
                 if pd.isna(val):
-                    row[col] = False          # başlangıçta hiçbiri yapılmamış
+                    row[col] = False
                 else:
-                    row[col] = bool(val)      # varsa True/False
+                    row[col] = bool(val)
              
             row["Path"] = row.get("Path") or "N/A"
 
             clean_row = {k: v for k, v in row.items() if k in COLS}
-            # FutureWarning’siz ekleme
             self.df.loc[len(self.df)] = clean_row
             added += 1
         if added:
             self._save()
-            print(f"✔ Excel güncellendi (bool sütunları düzeltildi): {self.excel_path}")
+            #print(f"✔ Excel güncellendi (bool sütunları düzeltildi): {self.excel_path}")
         return added
 
     def mark_published(self, set_name: str, platforms: list[str]):
@@ -77,11 +83,11 @@ class ExcelManager:
         import xlsxwriter
 
         with pd.ExcelWriter(self.excel_path, engine="xlsxwriter") as writer:
-            self.df.to_excel(writer, index=False, sheet_name="Sheet1")
+            self.df.to_excel(writer, index=False, sheet_name="Exploring LORA")
             wb  = writer.book
-            ws  = writer.sheets["Sheet1"]
+            ws  = writer.sheets["Exploring LORA"]
 
-            ws.freeze_panes(1, 0)      # 1. satırı freeze
+            ws.freeze_panes(1, 0) # First Row Freeze
 
             header_color = self.colors.get("header", "#D9E1F2")
             true_color   = self.colors.get("true",   "#C6EFCE")
@@ -89,31 +95,47 @@ class ExcelManager:
             error_color  = self.colors.get("error",  "#FFB6C1")
             zebra_dark_c = self.colors.get("zebra_dark", "#E8E8E8")
 
+            row_height = 16
             header_fmt = wb.add_format({"bold": True, "bg_color": header_color, "border": 1})
             true_fmt   = wb.add_format({"bg_color": true_color,   "border": 1})
             false_fmt  = wb.add_format({"bg_color": false_color,  "border": 1})
             error_fmt  = wb.add_format({"bg_color": error_color,  "border": 1})
             zebra_dark = wb.add_format({"bg_color": zebra_dark_c, "border": 1})
-            zebra_light= wb.add_format({"border": 1})          # <-- eksik satır
+            zebra_light= wb.add_format({"border": 1})
 
-            # kolon genişlikleri + header
+            # Column Width & Header
             for col_num, col_name in enumerate(self.df.columns):
                 max_len = max(self.df[col_name].astype(str).map(len).max(), len(col_name)) + 2
                 ws.set_column(col_num, col_num, max_len)
                 ws.write(0, col_num, col_name, header_fmt)
+                ws.set_row(0, row_height)
 
-            # satır / hücre renklendirme
+                # Fixed Width & Wrap
+                if "Youtube Title" in col_name:
+                    id =  self.df.columns.get_loc("Youtube Title")
+                    ws.set_column(id, id, self.title_width)
+                if "Youtube Description" in col_name:
+                    id = self.df.columns.get_loc("Youtube Description")
+                    ws.set_column(id, id, self.desc_width)
+                if "Path" in col_name:
+                    id = self.df.columns.get_loc("Path")
+                    ws.set_column(id, id, self.path_width)
+
+            # Row & Cell Coloring
             for row_num, row in self.df.iterrows():
                 fmt_base = zebra_dark if row_num % 2 else zebra_light
                 for col_num, col in enumerate(self.df.columns):
                     val = row[col]
-                    # string'e çevir (Path de olsa sorun yok)
                     val_str = str(val)
-
+                    if isinstance(val, datetime):
+                        val_str = val.strftime("%Y-%m-%d %H:%M:%S")   # salise yok
                     if isinstance(val, bool):
+                        val_str = str(val).upper()
                         cell_fmt = true_fmt if val else false_fmt
                     elif val_str.upper() == "ERROR":
                         cell_fmt = error_fmt
                     else:
                         cell_fmt = fmt_base
                     ws.write(row_num + 1, col_num, val_str, cell_fmt)
+                    ws.set_row(row_num + 1, row_height)
+                    

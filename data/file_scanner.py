@@ -29,8 +29,8 @@ def scan(root: str | Path) -> list[dict]:
             if i and ch.isupper():
                 set_name += " "
             set_name += ch
-
-        print(suffix, ext)   # terminalde göreceksin
+        
+        #print(suffix, ext)
 
         if set_name not in sets:
             sets[set_name] = {
@@ -40,7 +40,7 @@ def scan(root: str | Path) -> list[dict]:
                 "Square": False,
                 "Preview": False,
                 "Created At": datetime.fromtimestamp(p.stat().st_mtime),
-                "Discovered At": datetime.now(),
+                "Discovered At": datetime.now().replace(microsecond=0),
                 "Published At": None,
                 "Youtube": False,
                 "Vimeo": False,

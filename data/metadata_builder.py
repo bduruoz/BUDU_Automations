@@ -60,5 +60,5 @@ class FileScanner:
         return list(sets.values())
 
     def _get_created_date(self, path: Path) -> datetime:
-        return datetime.fromtimestamp(path.stat().st_ctime)
+        return datetime.fromtimestamp(path.stat().st_mtime)
     
