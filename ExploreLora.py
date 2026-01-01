@@ -11,19 +11,13 @@ if __name__ == "__main__":
     pipe = ContentPipeline(config=vars(cfg))
     from data.metadata_builder import FileScanner
     
-    #lora_sets = FileScanner(cfg.BASE_DIR).scan() 
-    
-    #print(lora_sets)
-   
-    print(FileScanner(cfg.BASE_DIR).scan())
-   
+    lora_sets = FileScanner(cfg.BASE_DIR).scan() 
+
     generator = YouTubeGenerator()
-    #for item in lora_sets:
-        #yt = generator.generate(item, cfg)
+    for item in lora_sets:
+        yt = generator.generate(item, cfg)
         #print("YT title :", yt["title"])
         #print("YT desc  :\n", yt["description"][:1000], "...\n")
         
-    #results = pipe.run()
+    results = pipe.run()
     #print("Excel çıktısı:", results["excel_path"])
-
-    print("Bitti.")
