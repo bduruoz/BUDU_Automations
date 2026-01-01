@@ -33,11 +33,12 @@ class ExcelManager:
             if row["Set Name"] in existing:
                 continue
             
-            # regresyon onarımı: Path → bool
             row["MP4"]     = bool(row.get("MP4", False))
             row["MOV"]     = bool(row.get("MOV", False))
             row["Square"]  = bool(row.get("Square", False))
             row["Preview"] = bool(row.get("Preview", False))
+            row["Discovered At"] = pd.Timestamp.now()  # şu an
+            row["Published At"]  = (pd.Timestamp(row["Published At"]) if pd.notna(row.get("Published At")) else "Non Published")
 
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme
