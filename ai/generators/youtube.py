@@ -21,12 +21,12 @@ Hashtags: {seo_tags}
         if self._txtgen is None:
             self._txtgen = TextGenerator(
                 base_url=cfg.LM_STUDIO_URL,
-                model=cfg.LM_MODEL,
+                model=cfg.LM_MODEL_NAME,
                 temperature=cfg.TEMPERATURE,
             )
 
         prompt = self.PROMPT.format(
-            set_name=row["SetName"],
+            set_name=row["Set Name"],
             artist=row["Artist"],
             trigger=row.get("Trigger", row["SetName"].replace(" ", "")),
             weight=row.get("Weight", "0.75-0.9"),
