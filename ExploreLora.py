@@ -16,7 +16,9 @@ if __name__ == "__main__":
     generator = YouTubeGenerator()
     for item in lora_sets:
         yt = generator.generate(item, cfg)
-        print("YT title :", yt["title"])
-        print("YT desc  :\n", yt["description"][:1000], "...\n")
+        #print("YT title :", yt["title"])
+        #print("YT desc  :\n", yt["description"][:1000], "...\n")
         
-        
+    results = pipe.run()
+    #print("Excel çıktısı:", results["excel_path"])
+

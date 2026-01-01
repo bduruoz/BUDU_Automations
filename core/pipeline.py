@@ -1,4 +1,6 @@
 # core/pipeline.py
+# en üst
+from ai.generators.youtube import YouTubeGenerator
 from pathlib import Path
 import types  # <-- ekle
 from AI_Automations.data.file_scanner import scan
@@ -24,8 +26,27 @@ class ContentPipeline:
         if not lora_sets:
             print("ℹ Yeni set bulunamadı")
             return
+        
+        yt_gen = YouTubeGenerator()
+        for row in lora_sets:
+            yt = yt_gen.generate(row, self.cfg)
+            row["Youtube Title"]       = yt["title"]
+            row["Youtube Description"] = yt["description"]
+        
         added = self.excel.add_new_sets(lora_sets)
         print(f"✔ Excel’e eklenen yeni set: {added}")
         
     def _scan(self):
         return scan(self.cfg.BASE_DIR)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
