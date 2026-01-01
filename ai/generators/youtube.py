@@ -28,7 +28,7 @@ Hashtags: {seo_tags}
         prompt = self.PROMPT.format(
             set_name=row["Set Name"],
             artist=row["Artist"],
-            trigger=row.get("Trigger", row["SetName"].replace(" ", "")),
+            trigger=row.get("Trigger", row["Set Name"].replace(" ", "")),
             weight=row.get("Weight", "0.75-0.9"),
             cfg=row.get("CFG", "6-8"),
             seo_tags=" ".join(cfg.COMMON_TAGS + cfg.SEO_KEYWORDS),
@@ -39,7 +39,7 @@ Hashtags: {seo_tags}
             title = title.replace("TITLE", "").strip()
             desc = desc.strip()
         except ValueError:
-            title, desc = f"Exploring {row['SetName']} LoRA", raw
+            title, desc = f"Exploring {row['Set Name']} LoRA", raw
 
         return {"title": title, "description": desc}
 
