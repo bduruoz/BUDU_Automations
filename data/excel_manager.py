@@ -36,6 +36,7 @@ class ExcelManager:
             row["MP4"]     = bool(row.get("MP4", False))
             row["MOV"]     = bool(row.get("MOV", False))
             row["Square"]  = bool(row.get("Square", False))
+            row["Preview"]  = bool(row.get("Preview", False))
             
             row["Discovered At"] = pd.Timestamp.now()  # şu an
             row["Published At"]  = (pd.Timestamp(row["Published At"]) if pd.notna(row.get("Published At")) else "Non Published")
@@ -47,7 +48,7 @@ class ExcelManager:
                 else:
                     row[col] = bool(val)      # varsa True/False
              
-            row["Path"] = str(row["Preview"]) if row["Preview"] else "N/A"
+            row["Path"] = row.get("Path") or "N/A"
 
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme

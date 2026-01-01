@@ -60,6 +60,6 @@ def scan(root: str | Path) -> list[dict]:
         elif suffix == "Square" and ext == ".mp4":
             sets[set_name]["Square"] = True
         elif suffix == "Preview" and ext == ".png":
-            sets[set_name]["Preview"] = p
+            sets[set_name]["Preview"] = True
 
     return list(sets.values())
