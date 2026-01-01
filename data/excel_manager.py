@@ -36,10 +36,6 @@ class ExcelManager:
             row["MP4"]     = bool(row.get("MP4", False))
             row["MOV"]     = bool(row.get("MOV", False))
             row["Square"]  = bool(row.get("Square", False))
-            #row["Preview"] = bool(row.get("Preview"))
-            
-            
-            
             
             row["Discovered At"] = pd.Timestamp.now()  # şu an
             row["Published At"]  = (pd.Timestamp(row["Published At"]) if pd.notna(row.get("Published At")) else "Non Published")
@@ -50,10 +46,8 @@ class ExcelManager:
                     row[col] = False          # başlangıçta hiçbiri yapılmamış
                 else:
                     row[col] = bool(val)      # varsa True/False
-
-            #path_obj = row.get("Preview")
-            #row["Path"] = str(path_obj) if path_obj else "N/A"
-            row["Path"] = str(row.get("Preview")) if row["Preview"] else "N/A"
+             
+            row["Path"] = str(row["Preview"]) if row["Preview"] else "N/A"
 
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme
