@@ -1,13 +1,11 @@
 {
-  "python.analysis.extraPaths": [
-    "."
-  ],
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportMissingImports": "none"
-  }
+  "python.analysis.extraPaths": ["."],
+  "python.analysis.diagnosticSeverityOverrides": 
+  {
+    "reportMissingImports": "none",
+    "reportUnknownMemberType": "none",
+    "reportOptionalMemberAccess": "none"
+  },
   "python.analysis.typeCheckingMode": "off",
-  "python.analysis.diagnosticSeverityOverrides": {
-      "reportUnknownMemberType": "none",
-      "reportOptionalMemberAccess": "none"
-    }
 }
+

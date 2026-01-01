@@ -3,8 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 COLS = [
-    "Set Name", 
-    "MP4", "MOV", "Square", "Preview",
+    "Set Name", "MP4", "MOV", "Square", "Preview", "Youtube Title", "Youtube Description",
     "Created At", "Discovered At", "Published At",
     "Youtube", "Vimeo", 
     "DuruozNet", 

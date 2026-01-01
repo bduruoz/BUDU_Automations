@@ -5,6 +5,8 @@ from pathlib import Path
 import types
 from AI_Automations.data.file_scanner import scan
 from AI_Automations.data.excel_manager import ExcelManager
+from ai.generators.youtube import YouTubeGenerator
+
 
 class ContentPipeline:
     def __init__(self, config):
@@ -22,11 +24,12 @@ class ContentPipeline:
 
     def run(self):
         print("▶ Content Pipeline Started")
-        lora_sets = FileScanner(self.cfg.BASE_DIR).scan() #scan(self.cfg.BASE_DIR)
+        lora_sets = FileScanner(self.cfg.BASE_DIR).scan() 
         if not lora_sets:
-            print("ℹ Yeni set bulunamadı")
+            print("ℹ Yeni LORA Seti Bulunamadı !")
             return
         
+        # Youtube Metinleri Oluştur
         yt_gen = YouTubeGenerator()
         for row in lora_sets:
             yt = yt_gen.generate(row, self.cfg)
