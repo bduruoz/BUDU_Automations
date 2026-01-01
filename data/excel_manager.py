@@ -39,6 +39,13 @@ class ExcelManager:
             row["Preview"] = bool(row.get("Preview", False))
             row["Discovered At"] = pd.Timestamp.now()  # şu an
             row["Published At"]  = (pd.Timestamp(row["Published At"]) if pd.notna(row.get("Published At")) else "Non Published")
+            platforms = ["Youtube", "Vimeo", "DuruozNet", "Linkedin", "Tumblr", "Mastodon", "BlueSky", "Twitter", "Instagram", "Shorts", "Facebook"]
+            for col in platforms:
+                val = row.get(col)
+                if pd.isna(val):
+                    row[col] = False          # başlangıçta hiçbiri yapılmamış
+                else:
+                    row[col] = bool(val)      # varsa True/False
 
             clean_row = {k: v for k, v in row.items() if k in COLS}
             # FutureWarning’siz ekleme
