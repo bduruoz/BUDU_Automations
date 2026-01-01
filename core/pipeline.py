@@ -1,9 +1,8 @@
 # core/pipeline.py
-# en üst
 from data.metadata_builder import FileScanner 
 from ai.generators.youtube import YouTubeGenerator
 from pathlib import Path
-import types  # <-- ekle
+import types
 from AI_Automations.data.file_scanner import scan
 from AI_Automations.data.excel_manager import ExcelManager
 
@@ -22,7 +21,7 @@ class ContentPipeline:
         )
 
     def run(self):
-        print("▶ ContentPipeline başladı")
+        print("▶ Content Pipeline Started")
         lora_sets = FileScanner(self.cfg.BASE_DIR).scan() #scan(self.cfg.BASE_DIR)
         if not lora_sets:
             print("ℹ Yeni set bulunamadı")

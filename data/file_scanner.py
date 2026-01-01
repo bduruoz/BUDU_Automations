@@ -19,7 +19,9 @@ def scan(root: str | Path) -> list[dict]:
         stem = p.stem
         if "_" not in stem:
             continue
-        set_name_raw, suffix = stem.rsplit("_", 1)
+        #set_name_raw, suffix = stem.rsplit("_", 1)
+        name_part, ext = stem.rsplit(".", 1)          # AndreasAchenbach_Preview , png
+        set_name_raw, suffix = name_part.rsplit("_", 1)  # AndreasAchenbach , Preview
 
         # CamelCase → space
         set_name = ""
@@ -27,6 +29,8 @@ def scan(root: str | Path) -> list[dict]:
             if i and ch.isupper():
                 set_name += " "
             set_name += ch
+
+        print(suffix, ext)   # terminalde göreceksin
 
         if set_name not in sets:
             sets[set_name] = {
@@ -49,8 +53,10 @@ def scan(root: str | Path) -> list[dict]:
                 "Instagram": False,
                 "Shorts": False,
                 "Facebook": False,
-                "Path": str(p),            # <-- string yol
+                "Path": str(p),
             }
+
+        print(suffix, ext)
 
         # flag’leri aç
         if suffix == "Youtube" and ext == ".mp4":

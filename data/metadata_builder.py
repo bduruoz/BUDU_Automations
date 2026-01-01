@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import datetime
 
 VIDEO_EXTENSIONS = {".mp4", ".mov"}
+IMAGE_EXTENSIONS = {".png"}
 
 ARTIST_MAP = {
     "Andreas Achenbach": {"Artist": "Andreas Achenbach", "Trigger": "aachenbach", "Weight": "0.8-0.9", "CFG": "7-8"},
@@ -17,7 +18,7 @@ class FileScanner:
         sets: dict[str, dict] = {}
 
         for path in self.root.iterdir():
-            if not path.is_file() or path.suffix.lower() not in VIDEO_EXTENSIONS:
+            if not path.is_file() or path.suffix.lower() not in VIDEO_EXTENSIONS | IMAGE_EXTENSIONS:
                 continue
 
             parts = path.stem.split("_")
@@ -48,11 +49,16 @@ class FileScanner:
                 }
 
             # 3) kategori kolonunu doldur
-            col = {"ProRes": "MOV", "Youtube": "MP4", "Square": "Square", "Preview": "Preview"}.get(category)
-            if col:
-                sets[set_name][col] = path
+            if category == "Preview":
+                sets[set_name]["Preview"] = True
+                sets[set_name]["Path"] = str(path)
+            else:
+                col = {"ProRes": "MOV", "Youtube": "MP4", "Square": "Square"}.get(category)
+                if col:
+                    sets[set_name][col] = path
 
         return list(sets.values())
 
     def _get_created_date(self, path: Path) -> datetime:
         return datetime.fromtimestamp(path.stat().st_ctime)
+    

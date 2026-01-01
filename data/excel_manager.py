@@ -3,11 +3,14 @@ import pandas as pd
 from pathlib import Path
 
 COLS = [
-    "Set Name", "MP4", "MOV", "Square", "Preview",
+    "Set Name", 
+    "MP4", "MOV", "Square", "Preview",
     "Created At", "Discovered At", "Published At",
-    "Youtube", "Vimeo", "DuruozNet", "Linkedin", "Tumblr",
-    "Mastodon", "BlueSky", "Twitter", "Instagram", "Shorts", "Facebook",
-    "Path"          # <-- yeni
+    "Youtube", "Vimeo", 
+    "DuruozNet", 
+    "Linkedin", "Tumblr", "Mastodon", "BlueSky", "Twitter", 
+    "Instagram", "Shorts", "Facebook",
+    "Path"
 ]
 
 class ExcelManager:
@@ -22,7 +25,7 @@ class ExcelManager:
             df = pd.read_excel(self.excel_path)
             for c in COLS:
                 if c not in df.columns:
-                    df[c] = False if c not in {"Set Name","Created At","Discovered At","Published At","Path"} else None
+                    df[c] = False if c not in {"Set Name", "Created At", "Discovered At", "Published At", "Path"} else None
             return df[COLS]
         return pd.DataFrame(columns=COLS)
     
