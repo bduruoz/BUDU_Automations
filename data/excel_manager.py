@@ -45,7 +45,7 @@ class ExcelManager:
             added += 1
         if added:
             self._save()
-            print(f"✔ Excel güncellendi (bool sütunları düzeltildi): {self.file_path}")
+            print(f"✔ Excel güncellendi (bool sütunları düzeltildi): {self.excel_path}")
         return added
 
     def mark_published(self, set_name: str, platforms: list[str]):
