@@ -10,7 +10,7 @@ ARTIST_MAP = {
     "Ivan Shishkin":     {"Artist": "Ivan Shishkin",     "Trigger": "shishkin",   "Weight": "0.75-0.85", "CFG": "6-7"},
 }
 
-class FileScanner:
+class MetaFileScanner:
     def __init__(self, root: str | Path):
         self.root = Path(root)
 
