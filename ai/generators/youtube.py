@@ -1,43 +1,12 @@
 # ai/generators/youtube.py
+import re
 from ai.text_generator import TextGenerator
 from core.interfaces import ContentGenerator
-from explora import TITLE_MARKER, DESC_MARKER
+from configs.explora import (DESCRIPTION_POOL_SIZE, DESCRIPTION_MAX_WORDS,
+                             DESCRIPTION_ARTIST, DESCRIPTION_GENERIC,
+                             DESCRIPTION_OUTRO, DESC_MARKER)
 
 class YouTubeGenerator(ContentGenerator):
-    DESCRIPTION_WRITER = f"""
-You are a creative copy-editor who speaks ONLY in English.
-
-TASK:
-- LoRA name: {{set_name}}
-- Artist LoRA ? {{is_artist}}   (yes/no)
-- Common tags: {{common_tags}}
-- SEO keywords: {{seo_keywords}}
-
-Write 5 DISTINCT English descriptions (max 90 words each).
-Each must:
-1. Start with an intriguing one-liner.
-2. Middle: explain the weight-test (0.01 → 3.0) and visual changes.
-3. End with the fixed outro block below.
-4. Keep tone {{"artsy" if is_artist else "technical"}}.
-5. NO Turkish, NO emoji, NO “Lora” capitalised wrong.
-
-Output format:
-### Desc-1:
-<text>
-
-### Desc-2:
-<text>
-...
-### Desc-5:
-<text>
-
-Fixed outro (add verbatim):
-ComfyUI only. Dreamshaper XL Lightning base.
-LoRA: {{set_name}}
-{{common_tags}}
-{{seo_keywords}}
-"""
-
     def __init__(self) -> None:
         self._txtgen: TextGenerator | None = None
 
@@ -48,7 +17,6 @@ LoRA: {{set_name}}
                 model=cfg.LM_MODEL_NAME,
                 temperature=cfg.TEMPERATURE,
             )
-
         prompt = self.PROMPT.format(
             set_name=row["Set Name"],
             artist=row["Artist"],
@@ -64,19 +32,40 @@ LoRA: {{set_name}}
             desc = desc.strip()
         except ValueError:
             title, desc = f"Exploring {row['Set Name']} LoRA", raw
-
         return {"title": title, "description": desc}
 
-# eski modül düzeyindeki fonksiyonu koruyalım (kırılım olmasın)
+# module-level fallback
 def generate(row: dict, cfg) -> dict:
     return YouTubeGenerator().generate(row, cfg)
 
-    
-#    PROMPT = f"""{TITLE_MARKER}
-#Exploring LoRA: {{set_name}} - {{simple_desc}}
-###
-#DESCRIPTION
-#P1) We transform an ordinary town painting into the {set_name} LORA style (SDXL).  
-#P2) Technical: weight {weight}, CFG {cfg}, trigger “{trigger}”.  
-#P3) Emotional: {artist}’s palette & light.  
-#Hashtags: {seo_tags}
+# pool helpers
+def build_desc_prompt(set_name: str, is_artist: bool,
+                      common_tags: str, seo: str) -> str:
+    body = DESCRIPTION_ARTIST if is_artist else DESCRIPTION_GENERIC
+    return f"""
+You are a creative copy-editor who speaks ONLY in English.
+Write {DESCRIPTION_POOL_SIZE} DISTINCT descriptions (≤{DESCRIPTION_MAX_WORDS} words each) for LoRA "{set_name}".
+Artist LoRA: {"yes" if is_artist else "no"}
+Tone: {"artsy" if is_artist else "technical"}
+
+Body:
+{body}
+
+Outro (add verbatim):
+{DESCRIPTION_OUTRO}
+
+Output:
+{DESC_MARKER}1: <text>
+{DESC_MARKER}2: <text>
+...
+{DESC_MARKER}{DESCRIPTION_POOL_SIZE}: <text>
+"""
+
+def pick_best_desc(reply: str, scorer=None) -> str:
+    chunks = re.findall(rf"(?<={re.escape(DESC_MARKER)}\d+:\s).*", reply, flags=re.S)
+    if not chunks:
+        return reply.strip()
+    if scorer is None:
+        return max(chunks, key=lambda c: len(c.split())).strip()
+    scored = [(c.strip(), scorer.score(c)) for c in chunks if c.strip()]
+    return max(scored, key=lambda x: x[1])[0]
