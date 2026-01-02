@@ -6,6 +6,7 @@ from data.excel_manager    import ExcelManager
 from ai.generators.youtube import YouTubeGenerator, build_desc_prompt, pick_best_desc
 from ai.text_generator     import TextGenerator
 from configs.explora import (TITLE_MARKER, DESC_MARKER, DESCRIPTION_TEMP)
+from data.metadata_builder import MetaDataBuilder
 
 class ContentPipeline:
     def __init__(self, config):
@@ -30,7 +31,13 @@ class ContentPipeline:
 
         yt_gen = YouTubeGenerator()
         for row in lora_sets:
-            name      = Path(row["lora_path"]).stem
+            # MetaDataBuilder sadece kendi alanını doldurur
+            meta = MetaDataBuilder(row["lora_path"],
+                                   row["Set Name"],
+                                   row["Created At"]).build()
+            row.update(meta)
+
+            name      = row["Set Name"]          # tekrar parse yok
             is_artist = "artist" in name.lower()
 
             # 1) Description pool

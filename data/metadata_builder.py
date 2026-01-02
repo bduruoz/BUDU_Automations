@@ -28,12 +28,12 @@ class FileScanner:
             set_name = ''.join([' ' + c if c.isupper() else c for c in set_name_raw]).strip()
 
             # 1) teknik alanları hazırla
-            tech = ARTIST_MAP.get(set_name, {
+            tech = ARTIST_MAP.get(set_name) or {
                 "Artist": set_name,
                 "Trigger": set_name.replace(" ", ""),
                 "Weight": "0.75-0.9",
                 "CFG": "6-8",
-            })
+            }
 
             # 2) set yoksa oluştur
             if set_name not in sets:
