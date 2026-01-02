@@ -5,6 +5,12 @@ BASE_DIR = Path(r"E:\AI-Outputs\LoraWeights\Publish")
 PUBLISHED_DIR = BASE_DIR / "Published"
 EXCEL_PATH = BASE_DIR / "expLora_registry.xlsx"
 
+# Prompt Variables
+TITLE_MARKER = "### Title:"
+DESC_MARKER  = "### Description:"
+DESCRIPTION_POOL_SIZE = 5
+TITLE_POOL_SIZE       = 5
+
 # Color Palette
 HEADER_COLOR = "#D9E1F2"
 TRUE_COLOR   = "#7DEF94"

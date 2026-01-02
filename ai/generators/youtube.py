@@ -1,17 +1,41 @@
 # ai/generators/youtube.py
 from ai.text_generator import TextGenerator
 from core.interfaces import ContentGenerator
+from explora import TITLE_MARKER, DESC_MARKER
 
 class YouTubeGenerator(ContentGenerator):
-    PROMPT = """\
-TITLE
-Exploring {set_name}: {artist}’s … (≤ 60 chars, no emoji)
+    DESCRIPTION_WRITER = f"""
+You are a creative copy-editor who speaks ONLY in English.
 
-DESCRIPTION
-P1) We transform an ordinary town painting into the {set_name} LORA style (SDXL).  
-P2) Technical: weight {weight}, CFG {cfg}, trigger “{trigger}”.  
-P3) Emotional: {artist}’s palette & light.  
-Hashtags: {seo_tags}
+TASK:
+- LoRA name: {{set_name}}
+- Artist LoRA ? {{is_artist}}   (yes/no)
+- Common tags: {{common_tags}}
+- SEO keywords: {{seo_keywords}}
+
+Write 5 DISTINCT English descriptions (max 90 words each).
+Each must:
+1. Start with an intriguing one-liner.
+2. Middle: explain the weight-test (0.01 → 3.0) and visual changes.
+3. End with the fixed outro block below.
+4. Keep tone {{"artsy" if is_artist else "technical"}}.
+5. NO Turkish, NO emoji, NO “Lora” capitalised wrong.
+
+Output format:
+### Desc-1:
+<text>
+
+### Desc-2:
+<text>
+...
+### Desc-5:
+<text>
+
+Fixed outro (add verbatim):
+ComfyUI only. Dreamshaper XL Lightning base.
+LoRA: {{set_name}}
+{{common_tags}}
+{{seo_keywords}}
 """
 
     def __init__(self) -> None:
@@ -43,7 +67,16 @@ Hashtags: {seo_tags}
 
         return {"title": title, "description": desc}
 
-
 # eski modül düzeyindeki fonksiyonu koruyalım (kırılım olmasın)
 def generate(row: dict, cfg) -> dict:
     return YouTubeGenerator().generate(row, cfg)
+
+    
+#    PROMPT = f"""{TITLE_MARKER}
+#Exploring LoRA: {{set_name}} - {{simple_desc}}
+###
+#DESCRIPTION
+#P1) We transform an ordinary town painting into the {set_name} LORA style (SDXL).  
+#P2) Technical: weight {weight}, CFG {cfg}, trigger “{trigger}”.  
+#P3) Emotional: {artist}’s palette & light.  
+#Hashtags: {seo_tags}

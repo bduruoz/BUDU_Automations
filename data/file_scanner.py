@@ -7,7 +7,7 @@ IMAGE_EXT = {".png"}
 
 def scan(root: str | Path) -> list[dict]:
     root = Path(root)
-    sets = {}                       # set_name -> dict
+    sets = {} # set_name -> dict
 
     for p in root.iterdir():
         if not p.is_file():
@@ -19,7 +19,7 @@ def scan(root: str | Path) -> list[dict]:
         stem = p.stem
         if "_" not in stem:
             continue
-        #set_name_raw, suffix = stem.rsplit("_", 1)
+        
         name_part, ext = stem.rsplit(".", 1)          # AndreasAchenbach_Preview , png
         set_name_raw, suffix = name_part.rsplit("_", 1)  # AndreasAchenbach , Preview
 
@@ -30,8 +30,6 @@ def scan(root: str | Path) -> list[dict]:
                 set_name += " "
             set_name += ch
         
-        #print(suffix, ext)
-
         if set_name not in sets:
             sets[set_name] = {
                 "Set Name": set_name,
@@ -55,8 +53,6 @@ def scan(root: str | Path) -> list[dict]:
                 "Facebook": False,
                 "Path": str(p),
             }
-
-        print(suffix, ext)
 
         # flag’leri aç
         if suffix == "Youtube" and ext == ".mp4":

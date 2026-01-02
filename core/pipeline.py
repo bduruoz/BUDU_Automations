@@ -1,10 +1,13 @@
 # core/pipeline.py
 import types
 from pathlib import Path
+from cv2 import line
 from data.metadata_builder import FileScanner 
 from ai.generators.youtube import YouTubeGenerator
 from AI_Automations.data.file_scanner import scan
 from AI_Automations.data.excel_manager import ExcelManager
+from configs.explora import TITLE_MARKER, DESC_MARKER
+from ai.text_generator import LMStudioGenerator
 
 class ContentPipeline:
     def __init__(self, config):
@@ -27,6 +30,12 @@ class ContentPipeline:
             print("ℹ New LORA Set Not Found !")
             return
         
+        # Prompt Title and Description Extraction
+        if line.startswith(TITLE_MARKER):
+            title = line.replace(TITLE_MARKER, "").strip()
+        if line.startswith(DESC_MARKER):
+            description = line.replace(DESC_MARKER, "").strip()
+        
         # Youtube Metinleri Oluştur
         yt_gen = YouTubeGenerator()
         for row in lora_sets:
@@ -40,3 +49,14 @@ class ContentPipeline:
     def _scan(self):
         return FileScanner(self.cfg.BASE_DIR).scan()
     
+    def build_description_pool(self, set_name: str, is_artist: bool, common_tags: str, seo: str) -> list[str]:
+        prompt = (
+            DESCRIPTION_WRITER
+            .replace("{{set_name}}", set_name)
+            .replace("{{is_artist}}", "yes" if is_artist else "no")
+            .replace("{{common_tags}}", common_tags)
+            .replace("{{seo_keywords}}", seo))
+        lmstudio = LMStudioGenerator()
+        reply = lmstudio.chat(prompt, temp=0.9)   # yüksek çeşitlilik
+        chunks = re.split(r"### Desc-\d+:\s*", reply)[1:]  # ilk eleman boş
+        return [c.strip() for c in chunks if c.strip()]
