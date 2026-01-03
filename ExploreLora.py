@@ -9,9 +9,9 @@ if __name__ == "__main__":
     from ai.generators.youtube import YouTubeGenerator
 
     pipe = ContentPipeline(config=vars(cfg))
-    from data.metadata_builder import FileScanner
+    from data.metadata_builder import MetaFileScanner
     
-    lora_sets = FileScanner(cfg.BASE_DIR).scan() 
+    lora_sets = MetaFileScanner(cfg.BASE_DIR).scan() 
 
     generator = YouTubeGenerator()
     for item in lora_sets:

@@ -14,7 +14,7 @@ ZEBRA_DARK   = "#E8E8E8"
 
 LM_STUDIO_URL   = "http://localhost:9090/v1"
 LM_MODEL_NAME   = "openai/gpt-oss-120b"
-#TEMPERATURE     = 0.75          # eski generator için
+TEMPERATURE     = 0.75          # eski generator için
 
 # Rate-Limit
 RATE_LIMIT_CALLS  = 30
