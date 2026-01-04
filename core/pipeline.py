@@ -1,12 +1,12 @@
 # core/pipeline.py
 import types, re
 from pathlib import Path
+from configs.explora_cfg import DESCRIPTION_TEMP
 from data.file_scanner     import FileScanner
+from data.metadata_builder import MetaDataBuilder
 from data.excel_manager    import ExcelManager
 from ai.generators.youtube import YouTubeGenerator, build_desc_prompt, pick_best_desc
 from ai.text_generator     import TextGenerator
-from configs.explora import (TITLE_MARKER, DESC_MARKER, DESCRIPTION_TEMP)
-from data.metadata_builder import MetaFileScanner
 
 class ContentPipeline:
     def __init__(self, config):
@@ -24,20 +24,21 @@ class ContentPipeline:
 
     def run(self):
         print("▶ Content Pipeline Started")
-        lora_sets = FileScanner(self.cfg.BASE_DIR).scan()
+        lora_sets = FileScanner(self.cfg.TOPUBLISH_DIR).scan()
         if not lora_sets:
             print("ℹ  No new LoRA set found.")
             return
 
         yt_gen = YouTubeGenerator()
         for row in lora_sets:
-            # MetaDataBuilder sadece kendi alanını doldurur
-            meta = MetaFileScanner(row["lora_path"],
-                                   row["Set Name"],
-                                   row["Created At"]).build()
-            row.update(meta)
+            # MetaDataBuilder only fills technical metadata
+            meta = MetaDataBuilder(self.cfg.TOPUBLISH_DIR).scan()
+#                                   row["lora_path"],
+#                                   row["Set Name"],
+#                                   row["Created At"]).build()
+            #row.update(meta)
 
-            name      = row["Set Name"]          # tekrar parse yok
+            name      = row["Set Name"]
             is_artist = "artist" in name.lower()
 
             # 1) Description pool
@@ -59,4 +60,5 @@ class ContentPipeline:
         print(f"✔  {added} new sets added to Excel")
 
     def _scan(self):
-        return FileScanner(self.cfg.BASE_DIR).scan()
+        return FileScanner(self.cfg.TOPUBLISH_DIR).scan()
+    

@@ -1,8 +1,11 @@
-# configs/explora.py
+# BUDU AUTIMATIONS 2026
+# configs/explora-cfg.py
+
 from pathlib import Path
 
-BASE_DIR = Path(r"E:\AI-Outputs\LoraWeights\Publish")
+BASE_DIR = Path(r"E:\AI-Outputs\LoraWeights")
 PUBLISHED_DIR = BASE_DIR / "Published"
+TOPUBLISH_DIR = BASE_DIR / "ToPublish"
 EXCEL_PATH = BASE_DIR / "expLora_registry.xlsx"
 
 # Color Palette
@@ -12,24 +15,20 @@ FALSE_COLOR  = "#F06979"
 ERROR_COLOR  = "#FFBDC7"
 ZEBRA_DARK   = "#E8E8E8"
 
+# LLM Settings
 LM_STUDIO_URL   = "http://localhost:9090/v1"
 LM_MODEL_NAME   = "openai/gpt-oss-120b"
-TEMPERATURE     = 0.75          # eski generator için
+TEMPERATURE     = 0.75
 
 # Rate-Limit
 RATE_LIMIT_CALLS  = 30
 RATE_LIMIT_PERIOD = 60          # saniye
 
 # SEO & Tags
-SEO_KEYWORDS  = ["AI art", "ComfyUI", "LoRA", "Stable Diffusion",
-                 "AI generated art", "AI illustrations", "AI creativity",
-                 "AI image generation", "SDXL", "Dream Shaper"]
-COMMON_TAGS   = ["#AIart", "#ComfyUI", "#LoRA", "#StableDiffusion",
-                 "#AIGeneratedArt", "#AIillustration", "#AIcreativity",
-                 "#AIimageGeneration", "#SDXL", "#DreamShaper"]
+SEO_KEYWORDS  = ["AI art", "ComfyUI", "LoRA", "Stable Diffusion", "AI generated art", "AI illustrations", "AI creativity", "AI image generation", "SDXL", "Dream Shaper"]
+COMMON_TAGS   = ["#AIart", "#ComfyUI", "#LoRA", "#StableDiffusion", "#AIGeneratedArt", "#AIillustration", "#AIcreativity", "#AIimageGeneration", "#SDXL", "#DreamShaper"]
 INCLUDE_LINKS = True
-LINKS = ["https://duruoz.net/watch/{set_name}",
-         "https://duruoz.net/blog/{set_name}"]
+#LINKS = ["https://duruoz.net/watch/{set_name}", "https://duruoz.net/blog/{set_name}"]
 
 SERIES_TAG = "Exploring LORA"
 
@@ -43,6 +42,7 @@ TITLE_POOL_SIZE         = 5
 DESCRIPTION_MAX_WORDS   = 90
 DESCRIPTION_TEMP        = 0.9
 DESCRIPTION_REFINE_TEMP = 0.4
+
 
 # Text Blocks
 DESCRIPTION_ARTIST = """

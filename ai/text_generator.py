@@ -1,7 +1,9 @@
+# BUDU AUTOMATIONS 2026
 # ai/text_generator.py
+
 import time, requests
 from pathlib import Path
-from configs.explora import RATE_LIMIT_CALLS, RATE_LIMIT_PERIOD
+from configs.explora_cfg import RATE_LIMIT_CALLS, RATE_LIMIT_PERIOD
 from utils.rate_limiter import RateLimiter
 
 RATE = RateLimiter(max_calls=RATE_LIMIT_CALLS, period=RATE_LIMIT_PERIOD)

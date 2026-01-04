@@ -1,4 +1,6 @@
+# BUDU AUTIMATIONS 2026
 # data/file_scanner.py
+
 from pathlib import Path
 from datetime import datetime
 
@@ -9,11 +11,12 @@ class FileScanner:
     def __init__(self, root: str | Path):
         self.root = Path(root)
         
-    def scan(root: str | Path) -> list[dict]:
-        root = Path(root)
+    def scan(self) -> dict:
         sets = {} # set_name -> dict
 
-        for p in root.iterdir():
+        print("Scanning directory:", self.root)
+
+        for p in self.root.iterdir():
             if not p.is_file():
                 continue
             ext = p.suffix.lower()
@@ -24,8 +27,7 @@ class FileScanner:
             if "_" not in stem:
                 continue
             
-            name_part, ext = stem.rsplit(".", 1)          # AndreasAchenbach_Preview , png
-            set_name_raw, suffix = name_part.rsplit("_", 1)  # AndreasAchenbach , Preview
+            set_name_raw, suffix = stem.rsplit("_", 1)          # AndreasAchenbach , Preview
 
             # CamelCase → space
             set_name = ""
@@ -34,6 +36,7 @@ class FileScanner:
                     set_name += " "
                 set_name += ch
             
+            # Create Set if not exists
             if set_name not in sets:
                 sets[set_name] = {
                     "Set Name": set_name,

@@ -2,10 +2,10 @@
 import re
 from ai.text_generator import TextGenerator
 from core.interfaces import ContentGenerator
-from configs.explora import (DESCRIPTION_POOL_SIZE, DESCRIPTION_MAX_WORDS,
+from configs.explora_cfg import (DESCRIPTION_POOL_SIZE, DESCRIPTION_MAX_WORDS,
                              DESCRIPTION_ARTIST, DESCRIPTION_GENERIC,
                              DESCRIPTION_OUTRO, DESC_MARKER)
-"""
+
 class YouTubeGenerator(ContentGenerator):
     def __init__(self) -> None:
         self._txtgen: TextGenerator | None = None
@@ -33,7 +33,7 @@ class YouTubeGenerator(ContentGenerator):
         except ValueError:
             title, desc = f"Exploring {row['Set Name']} LoRA", raw
         return {"title": title, "description": desc}
-    """
+
 
 # module-level fallback
 def generate(row: dict, cfg) -> dict:

@@ -1,4 +1,6 @@
+# BUDU AUTIMATIONS 2026
 # core/interfaces.py
+
 from typing import Protocol, runtime_checkable
 
 @runtime_checkable
