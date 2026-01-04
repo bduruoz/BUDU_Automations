@@ -1,7 +1,7 @@
 # core/pipeline.py
 import types, re
 from pathlib import Path
-from configs.explora_cfg import DESCRIPTION_TEMP
+import configs.explora_cfg as cfg
 from data.file_scanner     import FileScanner
 from data.metadata_builder import MetaDataBuilder
 from data.excel_manager    import ExcelManager
@@ -42,13 +42,18 @@ class ContentPipeline:
             is_artist = "artist" in name.lower()
 
             # 1) Description pool
-            prompt = build_desc_prompt(name, is_artist,
-                                       " ".join(self.cfg.COMMON_TAGS),
-                                       " ".join(self.cfg.SEO_KEYWORDS))
-            raw = TextGenerator(base_url=self.cfg.LM_STUDIO_URL,
-                                model=self.cfg.LM_MODEL_NAME,
-                                temperature=DESCRIPTION_TEMP).generate(prompt,
-                                                                       max_tokens=900)
+            prompt = build_desc_prompt(
+                pool_size = self.cfg.DESCRIPTION_POOL_SIZE,
+                max_words = self.cfg.DESCRIPTION_MAX_WORDS,
+                desc_marker = self.cfg.DESC_MARKER,
+                set_name = name,
+                is_artist = is_artist,
+                common_tags= " ".join(self.cfg.COMMON_TAGS),
+                seo = " ".join(self.cfg.SEO_KEYWORDS))
+            raw = TextGenerator(
+                base_url=self.cfg.LM_STUDIO_URL,
+                model=self.cfg.LM_MODEL_NAME,
+                temperature=cfg.DESCRIPTION_TEMP).generate(prompt, max_tokens=900)
             best_desc = pick_best_desc(raw)
 
             # 2) Title Create
