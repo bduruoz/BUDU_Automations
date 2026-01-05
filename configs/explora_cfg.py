@@ -22,7 +22,7 @@ TEMPERATURE     = 0.75
 
 # Rate-Limit
 RATE_LIMIT_CALLS  = 30
-RATE_LIMIT_PERIOD = 60          # saniye
+RATE_LIMIT_PERIOD = 120          # saniye
 
 # SEO & Tags
 SEO_KEYWORDS  = ["AI art", "ComfyUI", "LoRA", "Stable Diffusion", "AI generated art", "AI illustrations", "AI creativity", "AI image generation", "SDXL", "Dream Shaper"]

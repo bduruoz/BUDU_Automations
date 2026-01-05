@@ -1,3 +1,4 @@
+# BUDU AUTOMATIONS 2026
 # ai/generators/youtube.py
 from ast import pattern
 import re
@@ -26,6 +27,9 @@ class YouTubeGenerator(ContentGenerator):
             seo = " ".join(cfg.SEO_KEYWORDS),
         )
         raw = self._txtgen.generate(prompt, max_tokens=800)
+        
+        print("=== RAW DESCRIPTION === ", raw)
+        
         try:
             title, desc = raw.split("DESCRIPTION", 1)
             title = title.replace("TITLE", "").strip()
